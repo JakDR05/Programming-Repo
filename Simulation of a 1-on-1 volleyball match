@@ -1,0 +1,154 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <unistd.h>
+
+using namespace std;
+
+const int FIELD_SIZE = 6;
+
+void print_field(int ScorePlayer1, int ScorePlayer2, int BallPosition)
+{
+    system("clear");
+
+    cout << "Score: " << ScorePlayer1 << "-" << ScorePlayer2 << endl;
+    cout << "-------" << endl;
+
+    for(int i = 0; i < FIELD_SIZE; i++)
+    {
+        if (i == 0)
+        {
+            cout << "| P1  |";
+        }
+        else if (i == FIELD_SIZE - 1)
+        {
+            cout << "| P2  |";
+        }
+        else if (i == BallPosition)
+        {
+            cout << "|  o  |";
+        }
+        else 
+        {
+            cout << "|     |";
+        }
+        cout << endl;
+    }
+
+    cout << "-------" << endl;
+}
+
+int main()
+{
+    srand(time(NULL));
+
+    int ScorePlayer1 = 0;
+    int ScorePlayer2 = 0;
+    int WinningScore = 0;
+    int WinningSet = 0;
+    int BallPosition = FIELD_SIZE / 2;
+    int PointsToWinSet = 2;
+
+    cout << "THE MATCH BETWEEN PLAYER 1 AND PLAYER 2 IS ABOUT TO BEGIN." << endl;
+    system("clear");
+    sleep(2);
+
+    for(int i = 1; i <= 5; i++)
+    {
+        cout << "Starting Set " << i << endl;
+
+        ScorePlayer1 = 0;
+        ScorePlayer2 = 0;
+
+        while (true)
+        {
+            int action = rand() % 2 + 1;
+
+            if (action == 1)
+            {
+                if (BallPosition == 0)
+                {
+                    BallPosition++;
+                }
+                else if (BallPosition == FIELD_SIZE - 2 || BallPosition == FIELD_SIZE - 1)
+                {
+                    BallPosition--;
+                }
+                else
+                {
+                    BallPosition--;
+                }
+            }
+            else
+            {
+                if (BallPosition == FIELD_SIZE - 1)
+                {
+                    BallPosition--;
+                }
+                else if (BallPosition == 1 || BallPosition == 0)
+                {
+                    BallPosition++;
+                }
+                else
+                {
+                    BallPosition++;
+                }
+            }
+
+            if (BallPosition == 0)
+            {
+                ScorePlayer2++;
+            }
+            else if (BallPosition == FIELD_SIZE - 1)
+            {
+                ScorePlayer1++;
+            }
+
+            print_field(ScorePlayer1, ScorePlayer2, BallPosition);
+
+            if (ScorePlayer1 >= PointsToWinSet || ScorePlayer2 >= PointsToWinSet)
+            {
+                break;
+            }
+
+            usleep(1000000);
+        }
+
+        cout << "End of Set " << i << ", the winner is ";
+
+        if (ScorePlayer1 > ScorePlayer2)
+        {
+            cout << "Player 1" << endl;
+        }
+        else
+        {
+            cout << "Player 2" << endl;
+        }
+
+        if (ScorePlayer1 > WinningScore)
+        {
+            WinningScore = ScorePlayer1;
+            WinningSet = i;
+        }
+        else if (ScorePlayer2 > WinningScore)
+        {
+            WinningScore = ScorePlayer2;
+            WinningSet = i;
+        }
+
+        usleep(2000000);
+    }
+
+    cout << "\nThe winner of the match is ";
+
+    if (ScorePlayer1 > ScorePlayer2)
+    {
+        cout << "Player 1" << endl;
+    }
+    else
+    {
+        cout << "Player 2" << endl;
+    }
+
+    return 0;
+}
